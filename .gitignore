@@ -1,0 +1,25 @@
+# Ignore node_modules directory
+node_modules/
+config/
+
+# Ignore file
+package-lock.json
+
+# Ignore log files
+*.log
+
+# Ignore compiled binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Ignore environment-specific files
+.env
+.env.local
+
+# Ignore all .DS_Store files (macOS)
+.DS_Store
+
+# Ignore all .idea directory (JetBrains IDEs)
+.idea/
