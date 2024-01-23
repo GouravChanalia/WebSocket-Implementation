@@ -19,7 +19,57 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+      <input id="input" autocomplete="off" />
+      <button>Send</button>
+      <button id="Connect-disconnect-btn">Connect</button>
     </form>
   </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let socket = undefined;
+    let connected = false;
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+    const connectDisconnectBtn = document.getElementById('Connect-disconnect-btn');
+
+    connectDisconnectBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(connected){
+        connectDisconnectBtn.innerHTML = "Connect"
+        socket.disconnect();
+        messages.innerHTML = "";
+      } else {
+        connectDisconnectBtn.innerHTML = "Disconnect";
+        connectAndAddEvents();
+        connected = true;
+      }
+    })
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
+
+    function connectAndAddEvents(){
+      socket = io();
+      socket.on('chat message', (msg) => {
+        const item = document.createElement('li');
+        item.textContent = msg;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      socket.on("connect", () => {
+        console.log(socket.id);
+        console.log("connected");
+      })
+      socket.on("disconnect", (reason) => {
+        console.log(reason);
+      })
+    }
+  </script>
 </html>
