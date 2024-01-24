@@ -11,7 +11,9 @@ const options = {
 };
 
 const server = https.createServer(options, app);
-const io = new SocketIO(server);
+const io = new SocketIO(server, {
+  connectionStateRecovery: {},
+});
 
 io.on("connection", (socket) => {
   /** catch all incoming listener */

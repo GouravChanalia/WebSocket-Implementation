@@ -72,7 +72,6 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     let socket = undefined;
-    let connected = false;
     let isRoomSelected = false;
 
     const form = document.getElementById("form");
@@ -129,14 +128,17 @@
 
     connectDisconnectBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      if (connected) {
-        connectDisconnectBtn.innerHTML = "Connect";
-        socket.disconnect();
-        messages.innerHTML = "";
+      if (socket) {
+        if (socket?.connected) {
+          connectDisconnectBtn.innerHTML = "Connect";
+          socket.disconnect();
+        } else {
+          connectDisconnectBtn.innerHTML = "Disconnect";
+          socket.connect();
+        }
       } else {
-        connectDisconnectBtn.innerHTML = "Disconnect";
         connectAndAddEvents();
-        connected = true;
+        connectDisconnectBtn.innerHTML = "Disconnect";
       }
     });
 
@@ -152,7 +154,6 @@
 
     function connectAndAddEvents() {
       socket = io();
-
       socket.on("chat message", (msg, callback) => {
         const item = document.createElement("li");
         item.textContent = msg;
